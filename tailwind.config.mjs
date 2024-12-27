@@ -16,6 +16,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         background1: "rgba(255, 255, 255, 0.9)",
+        background2: "#808080",
         shadow1:"0px 7px 14px rgba(0, 0, 0, 0.05),0px 0px 3px rgba(0, 0, 0, 0.8),0px 0px 2px rgba(0, 0, 0, 0.05)",
         shadow2: "0 0 0 1px #4a47b1",
         border1: "#b8b8b8",

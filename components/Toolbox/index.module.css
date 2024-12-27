@@ -1,0 +1,43 @@
+.toolboxContainer {
+    @apply p-5 absolute top-1/4 left-7 w-80 rounded-md  ;
+    box-shadow: theme('colors.shadow1');
+    border: 1px solid theme('colors.border1');
+    display: block;
+    /* background-color: theme('colors.background2'); */
+    /* .hidden {
+      @apply  display: none;
+    }
+     */
+    
+    .toolboxItem {
+        @apply mb-3 ;
+        border: 2px solid theme('colors.border1');
+        border-radius: 0.5rem;
+
+        .toolboxTitle {
+            font-size: 1rem;
+            color: "#000";
+            padding: 0.5rem;
+        }
+
+        .colorContainer {
+            @apply flex flex-wrap justify-between items-center;
+            padding: 0.5rem;
+
+            .colorBox {
+                @apply w-6 h-6 rounded-md m-2 cursor-pointer;
+
+                &:hover, &.active {
+                    border: 2px solid theme('colors.border2');
+                }
+            }
+        }
+        .itemContainer {
+            @apply flex justify-between items-center;
+            padding: 0.7rem;
+
+        }
+
+    }
+}
+

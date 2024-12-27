@@ -15,8 +15,7 @@ import React from "react";
 
 
 const MenuBar = () => {
-  const [color, setColor] = React.useState("#000000");
-  const [brushSize, setBrushSize] = React.useState(5);
+ 
   return (
     <>
       <div className={styles.menuBar}>
@@ -35,15 +34,15 @@ const MenuBar = () => {
         <button className={styles.iconBtn}>
           <FontAwesomeIcon icon={faSave} />
         </button>
-        <input
+        {/* <input
           type="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
         //   className="color-picker cursor-pointer"
             className={styles.iconBtn}
-        />
+        /> */}
         
-        <input
+        {/* <input
           type="range"
           min="1"
           max="50"
@@ -51,7 +50,7 @@ const MenuBar = () => {
           onChange={(e) => setBrushSize(e.target.value)}
         //   className="brush-size cursor-pointer"
             className={styles.iconBtn}
-        />
+        /> */}
       </div>
     </>
   );

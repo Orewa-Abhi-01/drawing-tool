@@ -1,6 +1,6 @@
 
 .menuBar {
-    @apply gap-3 w-full  flex justify-between items-center rounded-lg  sm:flex-wrap 
+    @apply gap-3 w-full  flex justify-evenly items-center rounded-lg  sm:flex-wrap 
 }
 .iconBtn {
     @apply p-3  rounded-lg ;
