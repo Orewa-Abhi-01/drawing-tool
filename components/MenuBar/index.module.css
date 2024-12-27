@@ -1,0 +1,19 @@
+
+.menuBar {
+    @apply gap-3 w-full  flex justify-between items-center rounded-lg  sm:flex-wrap 
+}
+.iconBtn {
+    @apply p-3  rounded-lg ;
+    &:hover, &.active {
+        @apply bg-blue-800;
+    }
+}
+
+/* absolute px-5 py-1 flex justify-between left-1/2 top-10 w-1/4 shadow-lg rounded-lg */
+
+/* .menuBar {
+    @apply absolute px-5 py-1 flex justify-between left-1/2 top-10 w-1/4 shadow-lg rounded-lg;
+    transform: translateX(-50%);
+    box-shadow: theme('colors.shadow1');
+    border: 1px solid theme('colors.border1');
+} */
