@@ -42,6 +42,7 @@ const MenuBar = () => {
         //   className="color-picker cursor-pointer"
             className={styles.iconBtn}
         />
+        
         <input
           type="range"
           min="1"
