@@ -1,30 +1,151 @@
 "use client";
-import React, { useRef , useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useRef, useEffect, useLayoutEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { MENU_ITEMS } from "@/utils/constants";
+import { actionMenuItemsClick } from "@/app/redux/features/menuSlice";
 
 const CanvasBoard = () => {
-    const canvasRef = useRef(null);
-    const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
-    const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
+  const canvasRef = useRef(null);
+  const dispatch = useDispatch();
+  const isDrawing = useRef(false);
+  const drawHistory = useRef([]);
+  const historyPointer = useRef(0);
+  const { activeMenuItem, actionMenuItems } = useSelector(
+    (state) => state.menu
+  );
+  const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
 
-    useEffect(() => {
-      if(!canvasRef.current) return;
-      const canvas = canvasRef.current
-      const context = canvas.getContext('2d')
-      
-    //   when mounting 
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    if (actionMenuItems === MENU_ITEMS.DOWNLOAD) {
+      const url = canvas.toDataURL();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "canvas.png";
+      a.click();
+    } else if (
+      actionMenuItems === MENU_ITEMS.UNDO ||
+      actionMenuItems === MENU_ITEMS.REDO
+    ) {
+      if (historyPointer.current > 0 && actionMenuItems === MENU_ITEMS.UNDO)
+        historyPointer.current -= 1;
+      if (
+        historyPointer.current < drawHistory.current.length - 1 &&
+        actionMenuItems === MENU_ITEMS.REDO
+      )
+        historyPointer.current += 1;
+
+      const imageData = drawHistory.current[historyPointer.current];
+      context.putImageData(imageData, 0, 0);
+    }
+    else {
+      (historyPointer.current === 0 )
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      drawHistory.current.push(imageData);
+    }
+    dispatch(actionMenuItemsClick(null));
+  }, [actionMenuItems, dispatch]);
+
+  //this useEffect is for updating the canvas in terms of color and size of item(pencil or eraser)
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    const changeSpecsValues = (color, size) => {
+      context.strokeStyle = color;
+      context.lineWidth = size;
+    };
+
+    const handleChangeSpecs = (specs) => {
+      console.log(specs);
+      changeSpecsValues(specs.color, specs.size);
+    };
+    changeSpecsValues(color, size);
+  }, [color, size]);
+
+  //this useEffect is for initializing the canvas (mounting)
+  useLayoutEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    //   when mounting
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    }, []) 
-    // console.log(color, size);
-    
+    const beignPath = (x, y) => {
+      context.beginPath();
+      context.moveTo(x, y);
+    };
 
-    return (
-        <canvas ref={canvasRef} >
+    const drawLine = (x, y) => {
+      context.lineTo(x, y);
+      context.stroke();
+    };
 
-        </canvas>
-    )
-}    
+    const clearCanvas = () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    const handleMouseDown = (e) => {
+      isDrawing.current = true;
+      // const { offsetX: x, offsetY: y } = e;
+      beignPath(
+        e.clientX || e.touches[0].clientX,
+        e.clientY || e.touches[0].clientY
+      );
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDrawing.current) return;
+      // const { offsetX: x, offsetY: y } = e;
+      drawLine(
+        e.clientX || e.touches[0].clientX,
+        e.clientY || e.touches[0].clientY
+      );
+    };
+
+    const handleMouseUp = () => {
+      isDrawing.current = false;
+      // Capture the current canvas state
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      drawHistory.current.push(imageData);
+      historyPointer.current = drawHistory.current.length - 1;
+    };
+
+    const handlePathBegin = (path) => {
+      beginPath(path.x, path.y);
+    };
+
+    const handlePathDrawLine = (path) => {
+      drawLine(path.x, path.y);
+    };
+
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener("touchstart", handleMouseDown);
+    canvas.addEventListener("touchmove", handleMouseMove);
+    canvas.addEventListener("touchend", handleMouseUp);
+
+    return () => {
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseup", handleMouseUp);
+
+      canvas.removeEventListener("touchstart", handleMouseDown);
+      canvas.removeEventListener("touchmove", handleMouseMove);
+      canvas.removeEventListener("touchend", handleMouseUp);
+    };
+  }, []);
+  // console.log(color, size);
+
+  return <canvas ref={canvasRef}></canvas>;
+};
 
 export default CanvasBoard;

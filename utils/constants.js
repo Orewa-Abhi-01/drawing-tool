@@ -1,5 +1,5 @@
 const commonColors = {
-  Black: "#000000",
+  Black: "#0a0a0a",
   White: "#FFFFFF",
   Red: "#FF0000",
   Green: "#00FF00",

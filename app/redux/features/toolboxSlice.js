@@ -3,11 +3,11 @@ import { MENU_ITEMS , commonColors } from '@/utils/constants';
 
 const initialState = {
     [MENU_ITEMS.PENCIL]: {
-        color: commonColors.Black,
+        color: commonColors.White,
         size: 5
     },
     [MENU_ITEMS.ERASER]: {
-        color: commonColors.White,
+        color: commonColors.Black,
         size: 10
     },
     [MENU_ITEMS.UNDO]: {},
