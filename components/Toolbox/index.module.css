@@ -1,16 +1,10 @@
 .toolboxContainer {
-    @apply p-5 absolute top-1/4 left-7 w-80 rounded-md  ;
+    @apply p-2 absolute top-1/4 left-7 w-1/4 rounded-md  ;
     box-shadow: theme('colors.shadow1');
     /* border: 1px solid theme('colors.border1'); */
     
-    /* background-color: theme('colors.background2'); */
-    /* .hidden {
-      @apply  display: none;
-    }
-     */
-    
     .toolboxItem {
-        @apply mb-3 ;
+        @apply mb-2;
         border: 2px solid theme('colors.border1');
         border-radius: 0.5rem;
 

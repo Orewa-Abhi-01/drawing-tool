@@ -2,20 +2,35 @@
 import React from "react";
 import styles from "./index.module.css";
 
+import cx from "classnames";
+
 import { commonColors, MENU_ITEMS } from "@/utils/constants";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  changeColor,
+  changeBrushSize,
+} from "@/app/redux/features/toolboxSlice";
 
 const Toolbox = () => {
-  const [color, setColor] = React.useState("#000000");
-  const [brushSize, setBrushSize] = React.useState(10);
   const toolboxRef = React.useRef(null);
 
+  const dispatch = useDispatch();
   const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
-
   const showStrokeToolOption = activeMenuItem === MENU_ITEMS.PENCIL;
   const showBrushSizeToolOption =
     activeMenuItem === MENU_ITEMS.PENCIL ||
     activeMenuItem === MENU_ITEMS.ERASER;
+  const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
+
+  const updateBrushSize = (e) => {
+    dispatch(changeBrushSize({ item: activeMenuItem, size: e.target.value }));
+  };
+
+  const updateColor = (newColor) => {
+    dispatch(changeColor({ item: activeMenuItem, color: newColor }));
+
+  };
 
   return (
     <>
@@ -27,9 +42,9 @@ const Toolbox = () => {
               {Object.keys(commonColors).map((key) => (
                 <div
                   key={key}
-                  className={styles.colorBox}
+                  className={cx(styles.colorBox, {[styles.active]: color === commonColors[key]})}
                   style={{ backgroundColor: commonColors[key] }}
-                  onClick={() => setColor(commonColors[key])}
+                  onClick={() => updateColor( commonColors[key])}
                 />
               ))}
             </div>
@@ -42,11 +57,12 @@ const Toolbox = () => {
             <div className={styles.itemContainer}>
               <input
                 type="range"
-                value={brushSize}
+                value={size}
                 min="5"
                 max="50"
                 step="5"
-                onChange={(e) => setBrushSize(e.target.value)}
+                // onChange={(e) => updateBrushSize(e)}
+                onChange={updateBrushSize}
               />
             </div>
           </div>
@@ -57,25 +73,3 @@ const Toolbox = () => {
 };
 
 export default Toolbox;
-
-{
-  /* <input
-type="color"
-value={color}
-onChange={(e) => setColor(e.target.value)}
-className={styles.iconBtn}
-/> */
-}
-
-// const showColorContainer = () => {
-//   if (toolboxRef.current) {
-//     console.log("toolboxRef workng");
-//       toolboxRef.current.classList.toggle("hidden");
-//       // toolboxRef.current?.classList.toggle("hidden");
-
-//   }
-// };
-
-{
-  /* <button onClick={showColorContainer}>show</button> */
-}
