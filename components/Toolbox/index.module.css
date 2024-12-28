@@ -1,8 +1,8 @@
 .toolboxContainer {
     @apply p-5 absolute top-1/4 left-7 w-80 rounded-md  ;
     box-shadow: theme('colors.shadow1');
-    border: 1px solid theme('colors.border1');
-    display: block;
+    /* border: 1px solid theme('colors.border1'); */
+    
     /* background-color: theme('colors.background2'); */
     /* .hidden {
       @apply  display: none;

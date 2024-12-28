@@ -1,33 +1,3 @@
-// const colors = [
-//     "#FF5733", // Persimmon
-//     "#33FF57", // Mantis Green
-//     "#3357FF", // Royal Blue
-//     "#F1C40F", // Sunflower Yellow
-//     "#8E44AD", // Wisteria Purple
-//     "#E74C3C", // Cinnabar Red
-//     "#1ABC9C", // Turquoise Green
-//     "#3498DB", // Dodger Blue
-//     "#9B59B6", // Amethyst Purple
-//     "#34495E", // Wet Asphalt
-//     "#2ECC71", // Emerald Green
-//     "#F39C12", // Orange Peel
-//     "#D35400", // Pumpkin Orange
-//     "#C0392B", // Red Dahlia
-//     "#BDC3C7", // Silver
-//     "#7F8C8D", // Asbestos
-//     "#2980B9", // Belize Hole Blue
-//     "#27AE60", // Jelly Bean Green
-//     "#16A085", // Green Haze
-//     "#E67E22", // Carrot Orange
-//     "#ECF0F1", // Clouds White
-//     "#95A5A6", // Concrete Gray
-//     "#9B59B6", // Vivid Violet
-//     "#34495E", // Midnight Blue
-//     "#2C3E50"  // Dark Slate
-//   ];
-  
-//   export default colors;
-  
 
 const commonColors = {
     Black: "#000000",
@@ -51,8 +21,19 @@ const commonColors = {
     Chocolate: "#D2691E",
     Coral: "#FF7F50"
 };
+
+const MENU_ITEMS ={
+  PENCIL: "Pencil",
+  ERASER: "Eraser",
+  UNDO: "Undo",
+  REDO: "Redo",
+  DOWNLOAD: "Download",
+}
+
   
-  export { commonColors };
+  export { commonColors , MENU_ITEMS };
   
   
   
+
+  // export { MENu_Items };
