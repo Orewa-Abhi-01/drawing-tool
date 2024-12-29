@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MENU_ITEMS } from "@/utils/constants";
 import { actionMenuItemsClick } from "@/app/redux/features/menuSlice";
 
+import { socket } from "@/app/socket";
 const CanvasBoard = () => {
   const canvasRef = useRef(null);
   const dispatch = useDispatch();
@@ -41,12 +42,12 @@ const CanvasBoard = () => {
 
       const imageData = drawHistory.current[historyPointer.current];
       context.putImageData(imageData, 0, 0);
-    }
-    else {
-      (historyPointer.current === 0 )
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      drawHistory.current.push(imageData);
-    }
+    } 
+    // else {
+    //   historyPointer.current === 0;
+    //   const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    //   drawHistory.current.push(imageData);
+    // }
     dispatch(actionMenuItemsClick(null));
   }, [actionMenuItems, dispatch]);
 
@@ -57,15 +58,20 @@ const CanvasBoard = () => {
     const context = canvas.getContext("2d");
 
     const changeSpecsValues = (color, size) => {
-      context.strokeStyle = color;
-      context.lineWidth = size;
+      context.strokeStyle = color
+      context.lineWidth = size
     };
 
     const handleChangeSpecs = (specs) => {
-      console.log(specs);
+      console.log("specs are ", specs);
       changeSpecsValues(specs.color, specs.size);
     };
     changeSpecsValues(color, size);
+    socket.on("changeSpecs", handleChangeSpecs);
+
+    return () => {
+      socket.off("changeSpecs", handleChangeSpecs);
+    }
   }, [color, size]);
 
   //this useEffect is for initializing the canvas (mounting)
@@ -88,10 +94,6 @@ const CanvasBoard = () => {
       context.stroke();
     };
 
-    const clearCanvas = () => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-    };
-
     const handleMouseDown = (e) => {
       isDrawing.current = true;
       // const { offsetX: x, offsetY: y } = e;
@@ -99,6 +101,10 @@ const CanvasBoard = () => {
         e.clientX || e.touches[0].clientX,
         e.clientY || e.touches[0].clientY
       );
+      socket.emit("beginPath", {
+        x: e.clientX || e.touches[0].clientX,
+        y: e.clientY || e.touches[0].clientY,
+      });
     };
 
     const handleMouseMove = (e) => {
@@ -108,6 +114,10 @@ const CanvasBoard = () => {
         e.clientX || e.touches[0].clientX,
         e.clientY || e.touches[0].clientY
       );
+      socket.emit("drawLine", {
+        x: e.clientX || e.touches[0].clientX,
+        y: e.clientY || e.touches[0].clientY,
+      });
     };
 
     const handleMouseUp = () => {
@@ -133,6 +143,9 @@ const CanvasBoard = () => {
     canvas.addEventListener("touchmove", handleMouseMove);
     canvas.addEventListener("touchend", handleMouseUp);
 
+    socket.on("beginPath", handlePathBegin);
+    socket.on("drawLine", handlePathDrawLine);
+
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
@@ -141,6 +154,10 @@ const CanvasBoard = () => {
       canvas.removeEventListener("touchstart", handleMouseDown);
       canvas.removeEventListener("touchmove", handleMouseMove);
       canvas.removeEventListener("touchend", handleMouseUp);
+
+      socket.off("beginPath", handlePathBegin);
+      socket.off("drawLine", handlePathDrawLine);
+
     };
   }, []);
   // console.log(color, size);
