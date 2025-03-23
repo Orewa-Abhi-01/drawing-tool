@@ -17,7 +17,7 @@
 // };
 
 const commonColors = {
-  BLACK: 'black',
+  BLACK: '#0A0A0A',
   RED: 'red',
   GREEN: 'green',
   BLUE: 'blue',
