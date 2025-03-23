@@ -17,10 +17,13 @@ import {
   setActiveMenuItem,
   actionMenuItemsClick,
 } from "@/app/redux/features/menuSlice";
+import { useResizer } from "@/hooks/useResizer";
 
 const MenuBar = () => {
   const dispatch = useDispatch();
   const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
+
+  const { width } = useResizer();
 
   const handleMenuClick = (menuItem) => {
     dispatch(setActiveMenuItem(menuItem));
@@ -31,6 +34,8 @@ const MenuBar = () => {
     dispatch(actionMenuItemsClick(itemName));
   };
 
+  const menuButtonClass = width <= 768 ? styles.iconBtnMobile : styles.iconBtn;
+  
   return (
     <>
       <div className={styles.menuBar}>

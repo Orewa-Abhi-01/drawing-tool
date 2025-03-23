@@ -25,12 +25,12 @@ const Toolbox = () => {
 
   const updateBrushSize = (e) => {
     dispatch(changeBrushSize({ item: activeMenuItem, size: e.target.value }));
-    socket.emit("changeBrushSize", { size: e.target.value });
+    // socket.emit("changeBrushSize", { size: e.target.value });
   };
 
   const updateColor = (newColor) => {
     dispatch(changeColor({ item: activeMenuItem, color: newColor }));
-    socket.emit("changeColor", { color: newColor, size });
+    // socket.emit("changeColor", { color: newColor, size });
   };
 
   return (

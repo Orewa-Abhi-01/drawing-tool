@@ -1,11 +1,11 @@
 "use client";
-import React, { useRef, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useEffect, useLayoutEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { MENU_ITEMS } from "@/utils/constants";
 import { actionMenuItemsClick } from "@/app/redux/features/menuSlice";
+// import { socket } from "@/app/socket";
 
-import { socket } from "@/app/socket";
 const CanvasBoard = () => {
   const canvasRef = useRef(null);
   const dispatch = useDispatch();
@@ -67,11 +67,11 @@ const CanvasBoard = () => {
       changeSpecsValues(specs.color, specs.size);
     };
     changeSpecsValues(color, size);
-    socket.on("changeSpecs", handleChangeSpecs);
+    // socket.on("changeSpecs", handleChangeSpecs);
 
-    return () => {
-      socket.off("changeSpecs", handleChangeSpecs);
-    }
+    // return () => {
+    //   socket.off("changeSpecs", handleChangeSpecs);
+    // }
   }, [color, size]);
 
   //this useEffect is for initializing the canvas (mounting)
@@ -101,10 +101,10 @@ const CanvasBoard = () => {
         e.clientX || e.touches[0].clientX,
         e.clientY || e.touches[0].clientY
       );
-      socket.emit("beginPath", {
-        x: e.clientX || e.touches[0].clientX,
-        y: e.clientY || e.touches[0].clientY,
-      });
+      // socket.emit("beginPath", {
+      //   x: e.clientX || e.touches[0].clientX,
+      //   y: e.clientY || e.touches[0].clientY,
+      // });
     };
 
     const handleMouseMove = (e) => {
@@ -114,10 +114,10 @@ const CanvasBoard = () => {
         e.clientX || e.touches[0].clientX,
         e.clientY || e.touches[0].clientY
       );
-      socket.emit("drawLine", {
-        x: e.clientX || e.touches[0].clientX,
-        y: e.clientY || e.touches[0].clientY,
-      });
+      // socket.emit("drawLine", {
+      //   x: e.clientX || e.touches[0].clientX,
+      //   y: e.clientY || e.touches[0].clientY,
+      // });
     };
 
     const handleMouseUp = () => {
@@ -143,8 +143,8 @@ const CanvasBoard = () => {
     canvas.addEventListener("touchmove", handleMouseMove);
     canvas.addEventListener("touchend", handleMouseUp);
 
-    socket.on("beginPath", handlePathBegin);
-    socket.on("drawLine", handlePathDrawLine);
+    // socket.on("beginPath", handlePathBegin);
+    // socket.on("drawLine", handlePathDrawLine);
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
@@ -155,12 +155,33 @@ const CanvasBoard = () => {
       canvas.removeEventListener("touchmove", handleMouseMove);
       canvas.removeEventListener("touchend", handleMouseUp);
 
-      socket.off("beginPath", handlePathBegin);
-      socket.off("drawLine", handlePathDrawLine);
+      // socket.off("beginPath", handlePathBegin);
+      // socket.off("drawLine", handlePathDrawLine);
 
     };
   }, []);
-  // console.log(color, size);
+  
+  // Add resize observer for responsive canvas
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      if (!canvasRef.current) return;
+      const canvas = canvasRef.current;
+      const { width, height } = entries[0].contentRect;
+      canvas.width = width;
+      canvas.height = height;
+    });
+
+    if (canvasRef.current) {
+      resizeObserver.observe(canvasRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  // Memoize drawing functions
+  const draw = useCallback((e) => {
+    // Drawing logic
+  }, [color, size]);
 
   return <canvas ref={canvasRef}></canvas>;
 };
